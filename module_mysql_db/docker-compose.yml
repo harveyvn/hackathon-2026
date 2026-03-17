@@ -1,0 +1,62 @@
+version: '3.8'
+
+networks:
+  harvey-cloud:
+    external: true
+
+services:
+  db_metabase:
+    image: mysql:8.1
+    container_name: hackathon_26_db_metabase_container
+
+    ports:
+      - "5442:3306"
+
+    env_file:
+      - .encrypted_metabase_env
+
+    volumes:
+      - db_metabase_data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u $MYSQL_USER -p$MYSQL_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+    restart: unless-stopped
+
+    networks:
+      - harvey-cloud
+
+  db_dm:
+    image: mysql:8.1
+    container_name: hackathon_26_db_dm_container
+
+    ports:
+      - "5443:3306"
+
+    env_file:
+      - .encrypted_dm_env
+
+    volumes:
+      - db_dm_data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u $MYSQL_USER -p$MYSQL_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+    restart: unless-stopped
+
+    networks:
+      - harvey-cloud
+
+volumes:
+  db_metabase_data:
+    driver: local
+  db_dm_data:
+    driver: local
