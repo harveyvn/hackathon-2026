@@ -10,7 +10,7 @@ create-network:
 		echo "Docker network '$(NETWORK_NAME)' already exists."; \
 	fi
 
-MODULES = module_postgresql_db module_metabase
+MODULES = module_mysql_db
 build-all-modules:
 	@for module in $(MODULES); do \
 		echo "Starting $$module..."; \
