@@ -21,7 +21,7 @@ build-all-modules:
 
 migrate-dm:
 	@echo "Starting module_migration_dm..."
-	cd module_migration_dm && docker compose up -d
+	cd module_migration_dm && docker compose up --build
 
 start: create-network build-all-modules migrate-dm
 	@echo "All modules started."

@@ -9,5 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD [ "alembic", "upgrade", "head" ]
-CMD [ "python", "-m", "src.seed_tickets" ]
+RUN echo '#!/bin/sh\nalembic upgrade head\npython -m src.seed_tickets' > /run_migration_and_seed.sh \
+    && chmod +x /run_migration_and_seed.sh
+
+CMD ["/run_migration_and_seed.sh"]
