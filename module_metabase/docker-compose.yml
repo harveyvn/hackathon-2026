@@ -1,0 +1,26 @@
+#version: '3.8'
+
+networks:
+  harvey-cloud:
+    external: true
+
+services:
+  metabase:
+    image: metabase/metabase:v0.55.6
+    container_name: hackathon_26_metabase_container
+
+    ports:
+      - "8088:3000"
+
+    env_file:
+      - .encrypted_env
+
+    volumes:
+      - db_data:/var/lib/mysql
+
+    networks:
+      - harvey-cloud
+
+volumes:
+  db_data:
+    driver: local

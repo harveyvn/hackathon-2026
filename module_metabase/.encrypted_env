@@ -1,0 +1,1 @@
+MB_DB_CONNECTION_URI=jdbc:mysql://hackathon_26_db_metabase_container:3306/metabase_db?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&user=admin&password=password

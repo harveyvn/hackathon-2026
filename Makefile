@@ -10,11 +10,13 @@ create-network:
 		echo "Docker network '$(NETWORK_NAME)' already exists."; \
 	fi
 
-MODULES = module_mysql_db
+MODULES = module_mysql_db module_metabase
 build-all-modules:
 	@for module in $(MODULES); do \
 		echo "Starting $$module..."; \
-		cd $$module && docker compose up -d && cd ..; \
+		cd $$module && docker compose build --no-cache && docker compose up -d && cd ..; \
+		echo "Waiting 5 seconds for $$module to stabilize..."; \
+		sleep 5; \
 	done
 
 migrate-dm:
@@ -30,4 +32,13 @@ clean:
 		echo "Stopping $$module..."; \
 		cd $$module && docker compose down && cd ..; \
 	done
+	@echo "Removing Docker network $(NETWORK_NAME)..."
+	docker network rm $(NETWORK_NAME) || true
+
+clean-complete:
+	@for module in $(MODULES) module_airflow module_migration_dm; do \
+		echo "Stopping and removing $$module..."; \
+		cd $$module && docker compose down -v && cd ..; \
+	done
+	@echo "Removing Docker network $(NETWORK_NAME)..."
 	docker network rm $(NETWORK_NAME) || true
